@@ -1,9 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
+  baseURL: import.meta.env.VITE_BACKEND_URL
 });
-
 // 🔐 Attach token automatically
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
