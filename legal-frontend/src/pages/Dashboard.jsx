@@ -1,12 +1,12 @@
-import { useEffect, useState , useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import API from "../services/api";
 import UploadBox from "../components/UploadBox";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
-import { useLocation } from "react-router-dom";
 
 export default function Dashboard() {
   const [documents, setDocuments] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const [stats, setStats] = useState({
@@ -15,174 +15,185 @@ export default function Dashboard() {
     totalSummaries: 0,
     growth: 0
   });
+
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const openUpload = params.get("upload");
+  const openUpload = new URLSearchParams(location.search).get("upload");
   const uploadRef = useRef(null);
+
+  const fetchStats = async () => {
+    try {
+      const res = await API.get("/stats");
+      setStats(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchDocs = async () => {
+    try {
+      const res = await API.get("/docs");
+      setDocuments(res.data.docs || []);
+    } catch {
+      setDocuments([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+    fetchDocs();
+  }, []);
+
   useEffect(() => {
     if (openUpload && uploadRef.current) {
       uploadRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [openUpload]);
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await API.get("/stats");
-        setStats(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchStats();
-  }, []);
-
-  useEffect(() => {
-    const fetchDocs = async () => {
-      try {
-        const res = await API.get("/docs");
-        setDocuments(res.data.docs || []);
-      } catch {
-        setDocuments([]);
-      }
-    };
-    fetchDocs();
-  }, []);
 
   return (
     <AppLayout>
-      <div className="flex gap-6">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6 min-h-screen overflow-x-hidden">
 
+        {/* SIDEBAR */}
+        <div className="relative w-full md:w-64 bg-white rounded-xl p-2 shadow">
 
-        <div className="w-64 bg-white rounded-xl p-4 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-          <h1 className="text-xl font-bold text-blue-600 mb-6">
-            ⚖️ Legal AI
-          </h1>
-
-          <div className="space-y-3">
-            <SidebarItem active title="Dashboard" to="/dashboard" />
-
-            <SidebarItem
-              title="Documents"
-              onClick={() =>
-                window.open("https://github.com/", "_blank")
-              }
-            />
-
-            <SidebarItem title="Analytics" to="/analytics" />
-            <SidebarItem title="Settings" to="/settings" />
+          {/* MOBILE TOGGLE */}
+          <div
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex justify-between items-center cursor-pointer p-1 rounded hover:bg-gray-100"
+          >
+            <h1 className="text-lg font-bold text-blue-600">⚖️ LegalAI</h1>
+            <span className="md:hidden transition-transform duration-300">
+              {isOpen ? "▲" : "▼"}
+            </span>
           </div>
 
-          <div className="mt-6">
-            <h2 className="text-sm text-gray-500 mb-2">Your Docs</h2>
+          {/* SIDEBAR DROPDOWN */}
+          <div
+            className={`
+              absolute top-full left-0 w-full z-50
+              transition-all duration-300 ease-in-out
+              ${isOpen
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-2 pointer-events-none"}
+              
+              md:static md:opacity-100 md:translate-y-0 md:pointer-events-auto
+            `}
+          >
 
-            <div className="space-y-2 max-h-60 overflow-y-auto">
-              {documents.slice(0, 3).map((doc) => (
-                <div
-                  key={doc._id}
-                  onClick={() => navigate(`/document/${doc._id}`)}
-                  className="p-2 bg-white rounded shadow cursor-pointer hover:bg-gray-100 text-sm"
-                >
-                  {doc.name}
+            {/* SCROLLABLE CONTENT */}
+            <div className="
+              bg-white rounded-xl shadow-lg mt-2 p-3
+              max-h-[70vh] overflow-y-auto
+              space-y-3
+
+              md:max-h-none md:overflow-visible md:shadow-none md:p-0 md:mt-0
+            ">
+
+              <SidebarItem active title="Dashboard" to="/dashboard" />
+              <SidebarItem title="Documents" />
+              <SidebarItem title="Analytics" to="/analytics" />
+              <SidebarItem title="Settings" to="/settings" />
+
+              {/* YOUR DOCS */}
+              <div className="mt-4">
+                <h2 className="text-sm text-gray-500 mb-2">Your Docs</h2>
+
+                <div className="space-y-2">
+                  {documents.slice(0, 3).map((doc, index) => (
+                    <div
+                      key={doc._id || doc.name || index}
+                      onClick={() => navigate(`/document/${doc._id}`)}
+                      className="p-2 border rounded cursor-pointer hover:bg-gray-100 text-sm"
+                    >
+                      <p className="truncate">
+                        {doc.name || doc.fileName || doc.title || "Untitled Document"}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* LOGOUT (MOBILE) */}
+              <div className="mt-3 border-t pt-1 md:hidden">
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    navigate("/");
+                  }}
+                  className="w-full text-left px-3 py-2 rounded bg-red-50 text-red-600 hover:bg-red-100"
+                >
+                  Logout
+                </button>
+              </div>
+
             </div>
           </div>
         </div>
 
+        {/* MAIN CONTENT */}
+        <div className="flex-1 overflow-y-auto">
 
-        <div className="flex-1">
-
-
-          <div className="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+          {/* DESKTOP HEADER ONLY */}
+          <div className="hidden md:flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow">
             <h1 className="text-xl font-semibold text-blue-600">
               Dashboard
             </h1>
 
-            <div className="flex items-center gap-4">
-              <p className="text-sm text-gray-600">
-                Welcome back, <span className="font-semibold">User</span>
-              </p>
+            <button
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/");
+              }}
+              className="border px-4 py-2 rounded-lg hover:bg-gray-100 text-sm"
+            >
+              Logout
+            </button>
+          </div>
 
-              <button
-                onClick={() => {
-                  localStorage.removeItem("token");
-                  navigate("/");
-                }}
-                className="border px-4 py-2 rounded-lg hover:bg-gray-100 text-sm"
+          {/* STATS */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <StatCard title="Docs" value={stats.totalDocs} change="+12% from last month" />
+            <StatCard title="Queries" value={stats.totalQueries} change="+5% from last month" />
+            <StatCard title="Summaries" value={stats.totalSummaries} change="+8% from last month" />
+            <StatCard title="Growth" value={stats.growth} change="Monthly Usage" />
+          </div>
+
+          {/* UPLOAD */}
+          <div ref={uploadRef} className="mb-6 bg-white p-4 rounded-xl shadow">
+            <UploadBox
+              setDocuments={setDocuments}
+              refreshDocs={fetchDocs}
+              refreshStats={fetchStats}
+            />
+          </div>
+
+          {/* RECENT DOCS */}
+          <div className="bg-white p-4 rounded-xl shadow mb-6">
+            <h2 className="font-semibold mb-4">Recent Documents</h2>
+
+            {documents.slice(0, 3).map((doc, index) => (
+              <div
+                key={doc._id || doc.name || index}
+                onClick={() => navigate(`/document/${doc._id}`)}
+                className="p-2 border rounded mb-2 cursor-pointer hover:bg-gray-50"
               >
-                Logout
-              </button>
-            </div>
+                <p className="truncate">
+                  {doc.name || doc.fileName || doc.title || "Untitled Document"}
+                </p>
+              </div>
+            ))}
           </div>
 
-
-          <div className="grid grid-cols-4 gap-4 mb-6">
-            <StatCard
-              title="Total Documents"
-              value={stats.totalDocs}
-              change="+12% from last month"
-            />
-
-            <StatCard
-              title="Queries"
-              value={stats.totalQueries}
-              change="+5% from last month"
-            />
-
-            <StatCard
-              title="Summaries"
-              value={stats.totalSummaries}
-              change="+8% from last month"
-            />
-
-            <StatCard
-              title="Growth"
-              value={stats.growth}
-              change="Monthly usage"
-            />
-          </div>
-
-
-          <div
-            ref={uploadRef} 
-            className="mb-6 bg-white p-6 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
-          >
-            <UploadBox setDocuments={setDocuments} />
-          </div>
-
-
-          <div className="grid grid-cols-3 gap-6">
-
-            <div className="col-span-2 bg-white p-4 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-              <h2 className="font-semibold mb-4">Recent Documents</h2>
-
-              {documents.slice(0, 3).map((doc) => (
-                <div
-                  key={doc._id}
-                  onClick={() => navigate(`/document/${doc._id}`)}
-                  className="p-2 border rounded mb-2 cursor-pointer hover:bg-gray-50"
-                >
-                  {doc.name}
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-white p-4 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-              <h2 className="font-semibold mb-4">Quick Stats</h2>
-
-              <Stat label="Active Docs" value={documents.length} color="text-blue-600" />
-              <Stat label="Avg Response" value="1.2s" color="text-green-600" />
-              <Stat label="Accuracy" value="92%" color="text-purple-600" />
-            </div>
-          </div>
-
-
-          <div className="mt-6 bg-white p-4 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+          {/* ACTIVITY */}
+          <div className="bg-white p-4 rounded-xl shadow">
             <h2 className="font-semibold mb-4">Recent Activity</h2>
-
-            <Activity text="Uploaded new document" tag="New" />
-            <Activity text="Generated summary" tag="AI" />
-            <Activity text="Asked a question" tag="Query" />
+            {[
+              "Uploaded new document",
+              "Generated summary",
+              "Asked a question"
+            ].map((item, index) => (
+              <Activity key={index} text={item} />
+            ))}
           </div>
         </div>
       </div>
@@ -190,27 +201,17 @@ export default function Dashboard() {
   );
 }
 
-function SidebarItem({ title, active, to, onClick }) {
-  if (to) {
-    return (
-      <Link
-        to={to}
-        className={`block p-2 rounded ${active ? "bg-blue-600 text-white" : "hover:bg-gray-100"
-          }`}
-      >
-        {title}
-      </Link>
-    );
-  }
+/* COMPONENTS */
 
+function SidebarItem({ title, active, to }) {
   return (
-    <div
-      onClick={onClick}
-      className={`p-2 rounded cursor-pointer ${active ? "bg-blue-600 text-white" : "hover:bg-gray-100"
+    <Link
+      to={to}
+      className={`block px-3 py-2 rounded ${active ? "bg-blue-600 text-white" : "hover:bg-gray-100"
         }`}
     >
       {title}
-    </div>
+    </Link>
   );
 }
 
@@ -227,20 +228,10 @@ function StatCard({ title, value, change }) {
   );
 }
 
-function Stat({ label, value, color }) {
+function Activity({ text }) {
   return (
-    <div className="flex justify-between text-sm mb-2">
-      <span>{label}</span>
-      <span className={color}>{value}</span>
-    </div>
-  );
-}
-
-function Activity({ text, tag }) {
-  return (
-    <div className="flex justify-between bg-gray-100 p-2 rounded mb-2">
-      <span>{text}</span>
-      <span className="text-xs bg-blue-200 px-2 rounded">{tag}</span>
+    <div className="bg-gray-100 p-2 rounded mb-2 text-sm">
+      {text}
     </div>
   );
 }

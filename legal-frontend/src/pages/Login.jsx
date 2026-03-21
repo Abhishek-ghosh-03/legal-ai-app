@@ -29,7 +29,7 @@ export default function Login() {
       className="flex items-center justify-center"
     >
 
-      <div className="bg-white/70 backdrop-blur-md p-8 rounded-2xl shadow-xl w-[400px]">
+      <div className="bg-white/70 backdrop-blur-md p-8 rounded-2xl shadow-xl w-[90%] sm:w-[400px]">
 
 
         <div className="flex justify-center mb-4">
