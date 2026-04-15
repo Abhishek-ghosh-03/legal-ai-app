@@ -1,228 +1,179 @@
 import { useNavigate } from "react-router-dom";
-import AppLayout from "../components/AppLayout";
+import { motion } from "framer-motion";
+import { 
+  ShieldCheck, 
+  ArrowRight, 
+  MessageSquare, 
+  Zap, 
+  FileText, 
+  Lock, 
+  ChevronRight,
+  Menu,
+  X,
+  Scale
+} from "lucide-react";
+import { useState } from "react";
 
 export default function Landing() {
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
 
   return (
-    <div className="bg-white/60 backdrop-blur-sm min-h-screen pt-2 px-1">
-      <div className="flex justify-between items-center bg-white p-2 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] mx-1">
-
-        {/* LOGO */}
-        <h1 className="text-lg sm:text-xl font-bold text-blue-600">
-          ⚖️ LegalAI
-        </h1>
-
-        {/* BUTTONS */}
-        <div className="flex gap-2 sm:gap-4">
-          <button
-            onClick={() => navigate("/login")}
-            className="px-3 py-2 text-sm bg-white rounded-lg shadow hover:bg-gray-100"
-          >
-            Login
-          </button>
-
-          <button
-            onClick={() => navigate("/register")}
-            className="px-3 py-2 text-sm bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700"
-          >
-            Sign Up
-          </button>
-        </div>
-
-      </div>
-      <AppLayout>
-        {/* 🔥 HERO */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 px-4 md:px-12 py-10 md:py-16 items-center">
-
-          {/* LEFT */}
-          <div className="text-center md:text-left">
-            <p className="text-sm text-blue-600 mb-2">
-              AI Powered Legal Solutions
-            </p>
-
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-              Your AI Legal Advisor
-            </h1>
-
-            <p className="text-gray-600 mb-6 text-sm md:text-base">
-              Understand complex legal documents, get instant answers,
-              and make informed decisions with our advanced AI-powered
-              legal assistant.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <button
-                onClick={() => navigate("/register")}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 text-sm w-full sm:w-auto"
-              >
-                Get Started Free
-              </button>
-
-              <button
-                onClick={() => navigate("/dashboard")}
-                className="border px-4 py-2 rounded-lg text-sm w-full sm:w-auto"
-              >
-                Watch Demo
-              </button>
+    <div className="bg-slate-50 min-h-screen font-sans selection:bg-blue-600 selection:text-white">
+      
+      {/* NAVBAR */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/50">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="bg-blue-600 p-2 rounded-xl text-white">
+              <Scale size={20} />
             </div>
-
-            <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm text-gray-700">
-              <div>
-                <h3 className="font-bold">10K+</h3>
-                <p>Documents Analyzed</p>
-              </div>
-
-              <div>
-                <h3 className="font-bold">98%</h3>
-                <p>Accuracy Rate</p>
-              </div>
-
-              <div>
-                <h3 className="font-bold">500+</h3>
-                <p>Active Users</p>
-              </div>
-            </div>
+            <span className="text-xl font-black tracking-tight text-slate-900">Legal<span className="text-blue-600">AI</span></span>
           </div>
 
-          {/* RIGHT CARD */}
-          <div className="bg-white p-4 md:p-6 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-            <p className="text-sm text-gray-500 mb-2">
-              Document: Service Agreement
-            </p>
 
-            <p className="text-xs text-gray-400 mb-2">
-              Analysis in progress...
-            </p>
-
-            <div className="w-full bg-gray-200 h-2 rounded mb-4">
-              <div className="bg-blue-600 h-2 rounded w-[80%]"></div>
-            </div>
-
-            <div className="space-y-2 text-sm">
-              <p>✔️ Key Clauses Identified</p>
-              <p>✔️ Risk Level Low</p>
-              <p>✔️ Compliance Check Ready</p>
-            </div>
-          </div>
-        </section>
-
-        {/* 🔥 FEATURES */}
-        <section className="text-center py-12 md:py-16">
-          <h2 className="text-xl md:text-2xl font-bold mb-2">
-            Powerful Features
-          </h2>
-
-          <p className="text-gray-500 mb-8 text-sm md:text-base">
-            Everything you need to manage legal documents
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 px-4 md:px-12">
-            {features.map((f, i) => (
-              <div
-                key={i}
-                className="bg-white p-4 md:p-6 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
-              >
-                <h3 className="font-semibold mb-2">{f.title}</h3>
-                <p className="text-sm text-gray-600">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </AppLayout>
-
-      {/* 🔥 TESTIMONIALS */}
-      <section className="text-center py-12 md:py-16 bg-[#eef2f7]">
-        <h2 className="text-xl md:text-2xl font-bold mb-8">
-          Trusted by Legal Professionals
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 px-4 md:px-12">
-          {testimonials.map((t, i) => (
-            <div
-              key={i}
-              className="bg-white p-4 md:p-6 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+          <div className="hidden md:flex items-center gap-4">
+            <button 
+              onClick={() => navigate("/login")}
+              className="px-5 py-2.5 text-sm font-bold text-slate-700 hover:text-blue-600 transition-all"
             >
-              <p className="text-sm text-gray-600 mb-4">
-                "{t.text}"
-              </p>
-              <h4 className="font-semibold">{t.name}</h4>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 🔥 CTA */}
-      <section className="py-12 md:py-16 flex justify-center bg-pink-200 px-4">
-        <div className="bg-blue-600 text-white p-6 md:p-10 rounded-xl text-center w-full md:w-[60%] shadow-[0_8px_30px_rgba(0,0,0,0.2)]">
-          <h2 className="text-lg md:text-2xl font-bold mb-4">
-            Ready to Transform Your Legal Workflow?
-          </h2>
-
-          <p className="mb-6 text-sm md:text-base">
-            Join thousands of legal professionals using LegalAI
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-3">
-            <button
+              Sign In
+            </button>
+            <button 
               onClick={() => navigate("/register")}
-              className="bg-white text-blue-600 px-4 py-2 rounded text-sm w-full sm:w-auto"
+              className="px-6 py-2.5 text-sm font-bold bg-slate-900 text-white rounded-full hover:bg-blue-600 transition-all shadow-lg shadow-slate-900/10 active:scale-95"
             >
-              Start Free Trial
-            </button>
-
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="border px-4 py-2 rounded text-sm w-full sm:w-auto"
-            >
-              Learn More
+              Get Started
             </button>
           </div>
+
+          <button className="md:hidden text-slate-900" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
+
+        {/* MOBILE MENU */}
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="md:hidden absolute top-20 left-0 right-0 bg-white border-b border-slate-200 p-6 flex flex-col gap-4 shadow-xl"
+          >
+            <button onClick={() => navigate("/login")} className="w-full py-4 text-center font-bold border border-slate-200 rounded-2xl">Sign In</button>
+            <button onClick={() => navigate("/register")} className="w-full py-4 text-center font-bold bg-blue-600 text-white rounded-2xl">Start Free Trial</button>
+          </motion.div>
+        )}
+      </nav>
+
+      {/* HERO SECTION */}
+      <section className="pt-24 md:pt-40 pb-16 px-6 overflow-hidden relative text-center lg:text-left">
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-blue-100/30 rounded-full blur-3xl -z-10" />
+        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[250px] md:w-[600px] h-[250px] md:h-[600px] bg-indigo-100/30 rounded-full blur-3xl -z-10" />
+
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-[10px] md:text-xs font-black uppercase tracking-[0.2em] mb-6 md:mb-8 border border-blue-100 mx-auto lg:mx-0">
+              <Zap size={14} />
+              AI-Powered Compliance
+            </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tighter leading-[1.1] md:leading-[0.9] mb-6 md:mb-8">
+              Navigate <br/>
+              <span className="text-blue-600">Legal Complexity</span> <br/>
+              With AI.
+            </h1>
+            <p className="text-base md:text-xl text-slate-500 font-medium mb-8 md:mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              Break down thousands of pages of legal text in seconds. Get instant summaries, risk analysis, and actionable insights.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <button 
+                onClick={() => navigate("/register")}
+                className="group w-full sm:w-auto px-8 py-5 bg-blue-600 text-white rounded-[1.5rem] md:rounded-[2rem] font-black text-base md:text-lg flex items-center justify-center gap-3 hover:bg-slate-900 transition-all shadow-2xl shadow-blue-600/20 active:scale-95"
+              >
+                Start Analyzing Free
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative max-w-sm md:max-w-none mx-auto w-full"
+          >
+            <div className="relative z-10 p-5 md:p-8 glass rounded-[2.5rem] md:rounded-[3rem] border border-white/40 shadow-2xl overflow-hidden flex flex-col">
+               <div className="flex items-center justify-between mb-4 md:mb-6">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                  </div>
+                  <div className="px-2 py-1 bg-blue-50 text-blue-600 rounded-lg text-[8px] font-black uppercase tracking-widest">Analysis Engine</div>
+               </div>
+
+               <div className="space-y-4">
+                  <div className="p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                    <div className="flex items-center gap-2 mb-2">
+                      <FileText className="text-blue-600" size={14} />
+                      <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest truncate">Master_Service_Agreement.pdf</span>
+                    </div>
+                    <div className="w-full bg-slate-50 h-3 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: "85%" }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="bg-blue-600 h-full" 
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                     <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-2xl">
+                        <ShieldCheck className="text-emerald-600 mb-1" size={18} />
+                        <span className="block text-[8px] font-black text-emerald-600 uppercase mb-0.5">Risk Score</span>
+                        <span className="text-lg font-black text-emerald-700">9.4/10</span>
+                     </div>
+                     <div className="p-3 bg-amber-50 border border-amber-100 rounded-2xl">
+                        <Zap className="text-blue-600 animate-pulse" size={18} />
+                        <span className="block text-[8px] font-black text-amber-600 uppercase mb-0.5">Complexity</span>
+                        <span className="text-lg font-black text-amber-700">High</span>
+                     </div>
+                  </div>
+
+                  <div className="p-4 bg-slate-900 rounded-2xl text-white">
+                      <div className="flex items-center gap-2 mb-2">
+                        <MessageSquare size={12} className="text-blue-400" />
+                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">AI Summary</span>
+                      </div>
+                      <p className="text-[11px] text-slate-300 font-medium leading-normal">
+                        This agreement has standard liability caps but contains an unusual termination clause in Section 14.3.
+                      </p>
+                  </div>
+               </div>
+            </div>
+
+            {/* DECORATIVE ELEMENTS */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-blue-600/5 blur-[120px] -z-10" />
+          </motion.div>
         </div>
       </section>
-
-      {/* 🔥 FOOTER */}
-      <footer className="bg-black text-white px-4 md:px-12 py-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
-        <div>
-          <h3 className="font-bold mb-2">LegalAI</h3>
-          <p>Your AI-powered legal assistant</p>
-        </div>
-
-        <div>
-          <h4 className="font-semibold mb-2">Product</h4>
-          <p>Features</p>
-          <p>Pricing</p>
-        </div>
-
-        <div>
-          <h4 className="font-semibold mb-2">Company</h4>
-          <p>About</p>
-          <p>Contact</p>
-        </div>
-
-        <div>
-          <h4 className="font-semibold mb-2">Legal</h4>
-          <p>Privacy</p>
-          <p>Terms</p>
-        </div>
-      </footer>
     </div>
   );
 }
-
-/* DATA */
-
-const features = [
-  { title: "Smart Document Analysis", desc: "AI-powered review and clause extraction" },
-  { title: "Legal AI Assistant", desc: "Ask questions and get instant answers" },
-  { title: "Compliance Tracking", desc: "Track obligations and deadlines" },
-  { title: "Legal Analytics", desc: "Insights and reporting" },
-  { title: "Fast Processing", desc: "Analyze documents quickly" },
-  { title: "Secure & Encrypted", desc: "Your data is protected" }
-];
-
-const testimonials = [
-  { name: "Sarah Johnson", text: "This AI advisor saved hours of work." },
-  { name: "Michael Chen", text: "Clause extraction is incredibly accurate." },
-  { name: "Emma Williams", text: "Highly recommended for organizations." }
-];

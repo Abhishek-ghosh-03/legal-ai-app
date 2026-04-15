@@ -6,7 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 const app = express();
 
 app.use(cors({
-  origin: "https://legal-aii.netlify.app",
+  origin: ["https://legal-aii.netlify.app", "http://localhost:5173"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
