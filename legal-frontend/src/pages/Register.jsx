@@ -27,7 +27,7 @@ export default function Register() {
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 font-sans">
       <div className="absolute inset-0 bg-white/50 blur-[100px] -z-10" />
       <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100/50 rounded-full blur-[100px] -z-10" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-100/50 rounded-full blur-[100px] -z-10" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-slate-100/50 rounded-full blur-[100px] -z-10" />
 
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}

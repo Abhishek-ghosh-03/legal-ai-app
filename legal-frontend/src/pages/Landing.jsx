@@ -81,7 +81,7 @@ export default function Landing() {
       {/* HERO SECTION */}
       <section className="pt-24 md:pt-40 pb-16 px-6 overflow-hidden relative text-center lg:text-left">
         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-blue-100/30 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[250px] md:w-[600px] h-[250px] md:h-[600px] bg-indigo-100/30 rounded-full blur-3xl -z-10" />
+        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[250px] md:w-[600px] h-[250px] md:h-[600px] bg-slate-100/30 rounded-full blur-3xl -z-10" />
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           <motion.div

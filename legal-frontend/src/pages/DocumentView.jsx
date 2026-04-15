@@ -262,7 +262,7 @@ export default function DocumentView() {
            >
               <div className="flex items-center justify-between mb-10">
                 <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-                  <FileText className="text-indigo-600" size={24} />
+                  <FileText className="text-slate-600" size={24} />
                   Structural Nodes
                 </h2>
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{clauses.length} Extractable Entities</span>

@@ -157,7 +157,7 @@ export default function Dashboard() {
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <StatCard icon={<FileText />} title="Active Files" value={stats.totalDocs} trend="+12%" color="blue" />
               <StatCard icon={<TrendingUp />} title="Summaries" value={stats.totalSummaries} trend="+8%" color="emerald" />
-              <StatCard icon={<ActivityIcon />} title="Total Queries" value={stats.totalQueries} trend="+5%" color="indigo" />
+              <StatCard icon={<ActivityIcon />} title="Total Queries" value={stats.totalQueries} trend="+5%" color="slate" />
               <StatCard icon={<BarChart3 />} title="Efficiency" value={`${stats.growth}%`} trend="+2.1%" color="amber" />
            </div>
 
@@ -293,7 +293,7 @@ function StatCard({ icon, title, value, trend, color }) {
   const colors = {
     blue: "bg-blue-50 text-blue-600 border-blue-100",
     emerald: "bg-emerald-50 text-emerald-600 border-emerald-100",
-    indigo: "bg-indigo-50 text-indigo-600 border-indigo-100",
+    slate: "bg-slate-50 text-slate-600 border-slate-100",
     amber: "bg-amber-50 text-amber-600 border-amber-100"
   };
 
